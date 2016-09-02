@@ -7,6 +7,7 @@ var wiki = require("node-wikipedia");
 
 var MM_HOOK = process.env.MM_HOOK;
 var MM_TOKEN = process.env.MM_TOKEN;
+var WIKI_TOKEN = process.env.WK_TOKEN;
 var MM_CHANNEL = process.env.MM_CHANNEL;
 var MM_BOTNAME = process.env.MM_BOTNAME;
 var MM_AVATAR = process.env.MM_AVATAR;
@@ -27,7 +28,7 @@ app.post('/mm', function (req, res) {
     console.log("message detected");
     var message = mattermost.respond(req.body, function (hook) {
         if (hook.token !== MM_TOKEN){
-            console.log("token error");
+            console.log("MM token error");
             return null;
         }
         console.log('"message detected "' + hook.text + '" by ' + hook.user_name);
@@ -35,7 +36,7 @@ app.post('/mm', function (req, res) {
     });
     if (message && message.username !== MM_BOTNAME) {
         mattermost.send({
-            text: message,
+            text: message + " " + Math.random(),
             channel: MM_CHANNEL,
             username: MM_BOTNAME,
             icon_url: MM_AVATAR,
@@ -45,33 +46,30 @@ app.post('/mm', function (req, res) {
 });
 
 app.post('/mm/wiki', function (req, res) {
-    var id = mattermost.respond(req.body, function (hook) {
-        if (hook.token !== MM_TOKEN){
-            console.log("token error");
-            return null;
+    mattermost.respond(req.body, function (hook) {
+        if (hook.token !== WIKI_TOKEN) {
+            console.log("WK token error");
         }
         if (hook.text.indexOf(' ') >= 0) {
             console.log("Call to wikipedia" + hook.text + " by " + hook.username);
-            return wiki.page.data(hook.text.substr(hook.text.indexOf(' ') + 1), {content: true}, function (response) {
-                mattermost.send({
-                    text: 'https://en.wikipedia.org/?curid='+response.pageid,
+            wiki.page.data(hook.text.substr(hook.text.indexOf(' ') + 1), {content: true}, function (response) {
+                if (typeof response.pageid !== "undefined") {
+                    mattermost.send({
+                        text: 'Are you looking for https://en.wikipedia.org/?curid=' + response.pageid + "?",
+                        channel: hook.channel,
+                        username: MM_BOTNAME,
+                        icon_url: MM_AVATAR
+                    });
+                } else {
+                    mattermost.send({
+                    text: 'Page not found.',
                     channel: hook.channel,
                     username: MM_BOTNAME,
                     icon_url: MM_AVATAR
-                });
-                return 1;
+                });}
             });
         }
-        return null;
     });
-    if (!id || typeof id === 'undefined') {
-        mattermost.send({
-            text: 'Page not found',
-            channel: MM_CHANNEL,
-            username: MM_BOTNAME,
-            icon_url: MM_AVATAR
-        });
-    }
 });
 
 mattermost.send({
