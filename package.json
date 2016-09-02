@@ -1,0 +1,30 @@
+{
+  "name": "matterbot",
+  "version": "1.0.0",
+  "description": "Basic bot for a MatterMost server",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"No test written yet. I am open to suggestion\" && exit 1",
+    "start": "nohup bash config.sh &"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SuliacLEGUILLOU/matterBot.git"
+  },
+  "keywords": [
+    "bot",
+    "mattermost"
+  ],
+  "author": "sle-guil",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SuliacLEGUILLOU/matterBot/issues"
+  },
+  "homepage": "https://github.com/SuliacLEGUILLOU/matterBot#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mattermost": "^3.0.3",
+    "node-mattermost": "0.0.1"
+  }
+}

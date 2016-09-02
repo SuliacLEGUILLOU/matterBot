@@ -1,7 +1,8 @@
-# Logs
+# Logs and config
 logs
 *.log
 npm-debug.log*
+config.sh
 
 # Runtime data
 pids
