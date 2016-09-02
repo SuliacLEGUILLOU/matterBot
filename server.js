@@ -53,9 +53,9 @@ app.post('/mm/wiki', function (req, res) {
         if (hook.text.indexOf(' ') >= 0) {
             console.log("Call to wikipedia" + hook.text + " by " + hook.username);
             wiki.page.data(hook.text.substr(hook.text.indexOf(' ') + 1), {content: true}, function (response) {
-                if (typeof response.pageid !== "undefined") {
+                if (typeof response !== "undefined") {
                     mattermost.send({
-                        text: 'Are you looking for https://en.wikipedia.org/?curid=' + response.pageid + "?",
+                        text: '@' + hook.user_name + ', are you looking for https://en.wikipedia.org/?curid=' + response.pageid + "?",
                         channel: hook.channel,
                         username: MM_BOTNAME,
                         icon_url: MM_AVATAR
