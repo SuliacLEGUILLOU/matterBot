@@ -55,7 +55,7 @@ app.post('/mm/wiki', function (req, res) {
             return wiki.page.data(hook.text.substr(hook.text.indexOf(' ') + 1), {content: true}, function (response) {
                 mattermost.send({
                     text: 'https://en.wikipedia.org/?curid='+response.pageid,
-                    channel: MM_CHANNEL,
+                    channel: hook.channel,
                     username: MM_BOTNAME,
                     icon_url: MM_AVATAR
                 });
